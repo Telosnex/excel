@@ -16,10 +16,12 @@ Archive _cloneArchive(
       if (_archiveFiles.containsKey(file.name)) {
         copy = _archiveFiles[file.name]!;
       } else {
-        var content = file.content as Uint8List;
+        var content = file.content;
         var compress = !_noCompression.contains(file.name);
         copy = ArchiveFile(file.name, content.length, content)
-          ..compress = compress;
+          ..compression = compress
+              ? CompressionType.deflate /* default for zip */
+              : CompressionType.none;
       }
       clone.addFile(copy);
     }
